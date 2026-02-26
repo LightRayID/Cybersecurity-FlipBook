@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cybersecurity Robot Flipbook</title>
+    
+    <!-- External Resources -->
+    <script src="/_sdk/element_sdk.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1> Click the "Auto Flip" button to toggle Auto Flip<h1>
+    <!-- Flipbook Container -->
+    <div class="flipbook-container">
+        <div class="book-wrapper" id="bookWrapper">
+            <!-- Left Page -->
+            <div class="page left-page" id="leftPage">
+                <div class="page-content" id="leftPageContent">
+                    <svg class="robot-svg" viewBox="0 0 200 300" width="150" height="225"></svg>
+                    <div class="page-info" id="leftPageInfo"></div>
+                </div>
+                <div class="corner-accent top-left"></div>
+                <div class="corner-accent bottom-left"></div>
+            </div>
+            
+            <!-- Right Page -->
+            <div class="page right-page" id="rightPage">
+                <div class="page-content" id="rightPageContent">
+                    <div class="page-title" id="rightPageTitle"></div>
+                    <div class="page-text" id="rightPageText"></div>
+                </div>
+                <div class="corner-accent top-right"></div>
+                <div class="corner-accent bottom-right"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page Counter -->
+    <div class="page-counter">
+        <span id="pageNumber">1</span> / 6
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- Controls -->
+    <div class="controls">
+        <button class="btn" id="prevBtn">← Previous</button>
+        <button class="btn" id="autoFlipBtn">Auto Flip</button>
+        <button class="btn" id="nextBtn">Next →</button>
+    </div>
+
+    <!-- External Scripts -->
+    <script src="/_sdk/data_sdk.js"></script>
+    <script src="script.js"></script>
+    
+    <!-- Cloudflare Script -->
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d38cb98b383876c',t:'MTc3MjAzOTIwOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body>
+</html>
+
+<!-- Code validated with W3C Markup Validation Service -->
