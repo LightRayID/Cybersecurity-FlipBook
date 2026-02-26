@@ -1,0 +1,238 @@
+// Global variables
+let currentPage = 1;
+let autoFlipInterval = null;
+let isAutoFlipping = true;
+const defaultConfig = { auto_flip_enabled: 'true' };
+
+// Robot SVG generators
+function createRobot1() {
+    return `<g transform="translate(100, 150)">
+        <rect x="-25" y="-40" width="50" height="60" stroke="#000" stroke-width="2" fill="none"/>
+        <circle cx="0" cy="-50" r="20" stroke="#000" stroke-width="2" fill="none" style="animation: headScan 3s ease-in-out infinite"/>
+        <circle cx="-10" cy="-55" r="3" fill="#000" style="animation: eyeGlow 2s ease-in-out infinite"/>
+        <circle cx="10" cy="-55" r="3" fill="#000" style="animation: eyeGlow 2s ease-in-out infinite"/>
+        <line x1="-25" y1="-25" x2="-45" y2="-15" stroke="#000" stroke-width="2" style="animation: armWave 2s ease-in-out infinite; transform-origin: -25px -25px"/>
+        <line x1="25" y1="-25" x2="45" y2="-15" stroke="#000" stroke-width="2" style="animation: armWave 2s ease-in-out infinite; animation-delay: 0.5s; transform-origin: 25px -25px"/>
+        <line x1="-10" y1="20" x2="-10" y2="40" stroke="#000" stroke-width="2" style="animation: legStep 1.5s ease-in-out infinite"/>
+        <line x1="10" y1="20" x2="10" y2="40" stroke="#000" stroke-width="2" style="animation: legStep 2.5s ease-in-out infinite; animation-delay: 0.5s"/>
+    </g>`;
+}
+
+function createRobot2() {
+    return `<g transform="translate(100, 150)">
+        <rect x="-30" y="-35" width="60" height="55" stroke="#000" stroke-width="2" fill="none" style="animation: bodyPulse 2s ease-in-out infinite"/>
+        <rect x="-18" y="-55" width="36" height="25" rx="3" stroke="#000" stroke-width="2" fill="none"/>
+        <rect x="-12" y="-50" width="24" height="15" stroke="#000" stroke-width="1" fill="none"/>
+        <rect x="-8" y="-46" width="3" height="3" fill="#000" style="animation: eyeGlow 1.5s ease-in-out infinite"/>
+        <rect x="5" y="-46" width="3" height="3" fill="#000" style="animation: eyeGlow 1.5s ease-in-out infinite"/>
+        <line x1="-30" y1="-15" x2="-50" y2="-10" stroke="#000" stroke-width="2"/>
+        <line x1="30" y1="-15" x2="50" y2="-10" stroke="#000" stroke-width="2"/>
+        <rect x="-20" y="-10" width="40" height="30" stroke="#000" stroke-width="2" fill="none"/>
+        <circle cx="-10" cy="0" r="2" fill="#000" style="animation: eyeGlow 1.2s ease-in-out infinite"/>
+        <circle cx="0" cy="5" r="2" fill="#000" style="animation: eyeGlow 1.2s ease-in-out infinite; animation-delay: 0.3s"/>
+        <circle cx="10" cy="0" r="2" fill="#000" style="animation: eyeGlow 1.2s ease-in-out infinite; animation-delay: 0.6s"/>
+    </g>`;
+}
+
+function createRobot3() {
+    return `<g transform="translate(100, 150)">
+        <circle cx="0" cy="0" r="35" stroke="#000" stroke-width="2" fill="none" style="animation: bodyPulse 2.5s ease-in-out infinite"/>
+        <polygon points="0,-20 -15,-5 -15,20 0,25 15,20 15,-5" stroke="#000" stroke-width="2" fill="none"/>
+        <circle cx="0" cy="-35" r="15" stroke="#000" stroke-width="2" fill="none"/>
+        <circle cx="0" cy="-35" r="4" fill="#000" style="animation: eyeGlow 2s ease-in-out infinite"/>
+        <line x1="-10" y1="-48" x2="-15" y2="-60" stroke="#000" stroke-width="2" style="animation: armWave 2s ease-in-out infinite"/>
+        <line x1="10" y1="-48" x2="15" y2="-60" stroke="#000" stroke-width="2" style="animation: armWave 2s ease-in-out infinite; animation-delay: 0.3s"/>
+        <rect x="-10" y="0" width="20" height="15" stroke="#000" stroke-width="1" fill="none"/>
+        <line x1="-8" y1="20" x2="-8" y2="35" stroke="#000" stroke-width="2" style="animation: legStep 1.5s ease-in-out infinite"/>
+        <line x1="8" y1="20" x2="8" y2="35" stroke="#000" stroke-width="2" style="animation: legStep 1.5s ease-in-out infinite; animation-delay: 0.3s"/>
+    </g>`;
+}
+
+function createRobot4() {
+    return `<g transform="translate(100, 150)">
+        <polygon points="0,-35 20,-25 25,0 20,25 0,35 -20,25 -25,0 -20,-25" stroke="#000" stroke-width="2" fill="none" style="animation: bodyPulse 2s ease-in-out infinite"/>
+        <rect x="-15" y="-50" width="30" height="20" rx="4" stroke="#000" stroke-width="2" fill="none"/>
+        <circle cx="-7" cy="-45" r="2" fill="#000" style="animation: eyeGlow 1s ease-in-out infinite"/>
+        <circle cx="0" cy="-45" r="2" fill="#000" style="animation: eyeGlow 1s ease-in-out infinite; animation-delay: 0.2s"/>
+        <circle cx="7" cy="-45" r="2" fill="#000" style="animation: eyeGlow 1s ease-in-out infinite; animation-delay: 0.4s"/>
+        <line x1="-20" y1="-10" x2="-40" y2="0" stroke="#000" stroke-width="2"/>
+        <line x1="20" y1="-10" x2="40" y2="0" stroke="#000" stroke-width="2"/>
+        <circle cx="0" cy="0" r="10" stroke="#000" stroke-width="2" fill="none" style="animation: eyeGlow 2s ease-in-out infinite"/>
+        <line x1="-12" y1="35" x2="-12" y2="50" stroke="#000" stroke-width="2" style="animation: legStep 1s ease-in-out infinite"/>
+        <line x1="0" y1="35" x2="0" y2="50" stroke="#000" stroke-width="2" style="animation: legStep 1s ease-in-out infinite; animation-delay: 0.2s"/>
+        <line x1="12" y1="35" x2="12" y2="50" stroke="#000" stroke-width="2" style="animation: legStep 1s ease-in-out infinite; animation-delay: 0.4s"/>
+    </g>`;
+}
+
+function createRobot5() {
+    return `<g transform="translate(100, 150)">
+        <rect x="-20" y="-30" width="40" height="50" stroke="#000" stroke-width="2" fill="none" style="animation: bodyPulse 2s ease-in-out infinite"/>
+        <circle cx="0" cy="-45" r="18" stroke="#000" stroke-width="2" fill="none" style="animation: headScan 3s ease-in-out infinite"/>
+        <circle cx="-8" cy="-48" r="2.5" fill="#000" style="animation: eyeGlow 1.5s ease-in-out infinite"/>
+        <circle cx="8" cy="-48" r="2.5" fill="#000" style="animation: eyeGlow 1.5s ease-in-out infinite; animation-delay: 0.3s"/>
+        <line x1="-12" y1="-45" x2="12" y2="-45" stroke="#000" stroke-width="1"/>
+        <line x1="-20" y1="-35" x2="-35" y2="-45" stroke="#000" stroke-width="1.5"/>
+        <line x1="20" y1="-35" x2="35" y2="-45" stroke="#000" stroke-width="1.5"/>
+        <circle cx="0" cy="0" r="8" stroke="#000" stroke-width="2" fill="none" style="animation: eyeGlow 1.2s ease-in-out infinite"/>
+        <rect x="-18" y="18" width="12" height="8" stroke="#000" stroke-width="1.5" fill="none"/>
+        <rect x="6" y="18" width="12" height="8" stroke="#000" stroke-width="1.5" fill="none"/>
+    </g>`;
+}
+
+function createRobot6() {
+    return `<g transform="translate(100, 150)">
+        <rect x="-15" y="-40" width="30" height="65" stroke="#000" stroke-width="2" fill="none" style="animation: bodyPulse 1.8s ease-in-out infinite"/>
+        <rect x="-18" y="-58" width="36" height="22" rx="3" stroke="#000" stroke-width="2" fill="none"/>
+        <line x1="-8" y1="-52" x2="-8" y2="-48" stroke="#000" stroke-width="1.5"/>
+        <line x1="0" y1="-52" x2="0" y2="-48" stroke="#000" stroke-width="1.5"/>
+        <line x1="8" y1="-52" x2="8" y2="-48" stroke="#000" stroke-width="1.5"/>
+        <circle cx="-8" cy="-50" r="1.5" fill="#000" style="animation: eyeGlow 1.3s ease-in-out infinite"/>
+        <circle cx="0" cy="-50" r="1.5" fill="#000" style="animation: eyeGlow 1.3s ease-in-out infinite; animation-delay: 0.2s"/>
+        <circle cx="8" cy="-50" r="1.5" fill="#000" style="animation: eyeGlow 1.3s ease-in-out infinite; animation-delay: 0.4s"/>
+        <line x1="-15" y1="-20" x2="-35" y2="-25" stroke="#000" stroke-width="2"/>
+        <line x1="15" y1="-20" x2="35" y2="-25" stroke="#000" stroke-width="2"/>
+        <line x1="-15" y1="0" x2="-30" y2="10" stroke="#000" stroke-width="2" style="animation: armWave 2s ease-in-out infinite"/>
+        <line x1="15" y1="0" x2="30" y2="10" stroke="#000" stroke-width="2" style="animation: armWave 2s ease-in-out infinite; animation-delay: 0.4s"/>
+        <line x1="-12" y1="25" x2="-25" y2="35" stroke="#000" stroke-width="1.5"/>
+        <line x1="12" y1="25" x2="25" y2="35" stroke="#000" stroke-width="1.5"/>
+    </g>`;
+}
+
+// Page data
+const pageData = [
+    { title: 'Initializing', robotGen: createRobot1, description: '[STARTUP]\n> System booting\n> Defenses online' },
+    { title: 'Detecting', robotGen: createRobot2, description: '[THREAT SCAN]\n> Analyzing patterns\n> Threat detected' },
+    { title: 'Protecting', robotGen: createRobot3, description: '[SHIELD MODE]\n> Active defense\n> Network secured' },
+    { title: 'Analyzing', robotGen: createRobot4, description: '[FORENSICS]\n> Attack traced\n> Malware isolated' },
+    { title: 'Recovering', robotGen: createRobot5, description: '[RECOVERY]\n> Systems restored\n> Integrity verified' },
+    { title: 'Vigilant', robotGen: createRobot6, description: '[MONITORING]\n> Continuous watch\n> Always ready' }
+];
+
+// Core Functions
+function renderPage(pageNum) {
+    const data = pageData[pageNum - 1];
+    document.querySelector('.robot-svg').innerHTML = data.robotGen();
+    document.getElementById('leftPageInfo').textContent = data.description;
+    document.getElementById('rightPageTitle').textContent = data.title;
+    document.getElementById('rightPageText').textContent = `Page ${pageNum} of 6\n\nCybersecurity Robot in action`;
+    document.getElementById('pageNumber').textContent = pageNum;
+    updateProgressBar();
+    
+    // Add flip animation
+    document.getElementById('bookWrapper').classList.add('flip-transition');
+    setTimeout(() => {
+        document.getElementById('bookWrapper').classList.remove('flip-transition');
+    }, 600);
+}
+
+function updateProgressBar() {
+    document.getElementById('progressBar').style.width = (currentPage / 6) * 100 + '%';
+}
+
+function nextPage() {
+    currentPage = currentPage < 6 ? currentPage + 1 : 1;
+    renderPage(currentPage);
+}
+
+function previousPage() {
+    currentPage = currentPage > 1 ? currentPage - 1 : 6;
+    renderPage(currentPage);
+}
+
+// Auto Flip Functions
+function toggleAutoFlip() {
+    isAutoFlipping = !isAutoFlipping;
+    const btn = document.getElementById('autoFlipBtn');
+    
+    if (isAutoFlipping) {
+        btn.textContent = 'Auto Flip';
+        btn.style.background = '#ffffff';
+        btn.style.color = '#000000';
+        startAutoFlip();
+    } else {
+        btn.textContent = 'Auto Flip ⏸';
+        btn.style.background = '#000000';
+        btn.style.color = '#ffffff';
+        stopAutoFlip();
+    }
+}
+
+function startAutoFlip() {
+    autoFlipInterval = setInterval(nextPage, 8000);
+}
+
+function stopAutoFlip() {
+    if (autoFlipInterval) {
+        clearInterval(autoFlipInterval);
+        autoFlipInterval = null;
+    }
+}
+
+// SDK Configuration
+async function onConfigChange(config) {
+    const autoFlipEnabled = config.auto_flip_enabled === 'true' || config.auto_flip_enabled === true;
+    
+    if (autoFlipEnabled && !isAutoFlipping) {
+        isAutoFlipping = true;
+        document.getElementById('autoFlipBtn').textContent = 'Auto Flip';
+        document.getElementById('autoFlipBtn').style.background = '#ffffff';
+        document.getElementById('autoFlipBtn').style.color = '#000000';
+        startAutoFlip();
+    } else if (!autoFlipEnabled && isAutoFlipping) {
+        isAutoFlipping = false;
+        document.getElementById('autoFlipBtn').textContent = 'Auto Flip ⏸';
+        document.getElementById('autoFlipBtn').style.background = '#000000';
+        document.getElementById('autoFlipBtn').style.color = '#ffffff';
+        stopAutoFlip();
+    }
+}
+
+// Event Listeners
+document.addEventListener('DOMContentLoaded', () => {
+    // Button event listeners
+    document.getElementById('prevBtn').addEventListener('click', previousPage);
+    document.getElementById('nextBtn').addEventListener('click', nextPage);
+    document.getElementById('autoFlipBtn').addEventListener('click', toggleAutoFlip);
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === ' ') {
+            e.preventDefault();
+            nextPage();
+            stopAutoFlip();
+            isAutoFlipping = false;
+            document.getElementById('autoFlipBtn').textContent = 'Auto Flip ⏸';
+            document.getElementById('autoFlipBtn').style.background = '#000000';
+            document.getElementById('autoFlipBtn').style.color = '#ffffff';
+        } else if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            previousPage();
+            stopAutoFlip();
+            isAutoFlipping = false;
+            document.getElementById('autoFlipBtn').textContent = 'Auto Flip ⏸';
+            document.getElementById('autoFlipBtn').style.background = '#000000';
+            document.getElementById('autoFlipBtn').style.color = '#ffffff';
+        }
+    });
+    
+    // Initialize SDK if available
+    if (window.elementSdk) {
+        window.elementSdk.init({
+            defaultConfig,
+            onConfigChange,
+            mapToCapabilities: () => ({
+                recolorables: [],
+                borderables: [],
+                fontEditable: undefined,
+                fontSizeable: undefined
+            }),
+            mapToEditPanelValues: (config) => new Map([
+                ['auto_flip_enabled', config.auto_flip_enabled || defaultConfig.auto_flip_enabled]
+            ])
+        });
+    }
+    
+    // Initial render and auto-flip start
+    renderPage(1);
+    startAutoFlip();
+});
